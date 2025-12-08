@@ -1,0 +1,10 @@
+# .gitignore
+venv/
+__pycache__/
+*.pyc
+.env
+.DS_Store
+data/
+!data/.gitkeep
+# Büyük PDF ve veritabanı dosyalarını yollamamak için data klasörünü yoksayıyoruz
+# ama klasör yapısı bozulmasın diye .gitkeep hariç tutuyoruz.
