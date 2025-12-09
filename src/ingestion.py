@@ -52,7 +52,7 @@
 import os
 import shutil
 from langchain_community.document_loaders import PyPDFLoader
-from langchain.text_splitter import RecursiveCharacterTextSplitter  # YENİ EKLENEN
+from langchain_text_splitters import RecursiveCharacterTextSplitter  # Bu satır güncellendi
 from src.rag_engine import AlesRagEngine
 
 PDF_FOLDER_PATH = "./data/raw_pdfs"

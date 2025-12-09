@@ -35,17 +35,30 @@ if search_btn and query:
     st.subheader("Bulunan Benzer Sorular:")
 
     for i, res in enumerate(results):
-        # Benzerlik skoru (Distance ne kadar küçükse o kadar iyi)
-        # Chroma varsayılan L2 distance kullanır. 0 = birebir aynı. 1 üzeri = alakasız.
         score_display = round(res['skor'], 4)
 
-        with st.expander(f"Sonuç {i + 1} (Benzerlik Skoru: {score_display}) - Kaynak: {res['kaynak']}"):
-            st.info(f"📄 Sayfa: {res['sayfa'] + 1}")
+        # --- YENİ PUANLAMA MANTIĞI ---
+        # Cosine Distance: 0 = Birebir Aynı, 1 = Tamamen Farklı
+        # Genelde 0.3'ün altı "Oldukça Benzer" demektir.
+
+        match_status = "Bilinmiyor"
+        match_color = "grey"
+
+        if res['skor'] < 0.20:
+            match_status = "🔥 Birebir / Çok Yüksek Benzerlik"
+            match_color = "green"
+        elif res['skor'] < 0.40:
+            match_status = "⚡ Benzer İçerik / Aynı Konu"
+            match_color = "orange"
+        else:
+            match_status = "Benzerlik Düşük"
+            match_color = "red"
+
+        with st.expander(f"Sonuç {i + 1} ({match_status}) - Skor: {score_display}"):
+            st.info(f"📄 Kaynak: {res['kaynak']} | Sayfa: {res['sayfa'] + 1}")
             st.write(res['icerik'])
 
-            if res['skor'] < 0.2:
-                st.success("🔥 Bu soru çok yüksek ihtimalle çıkmış!")
-            elif res['skor'] < 0.5:
-                st.warning("⚡ Benzer bir soru olabilir.")
+            if res['skor'] < 0.40:
+                st.success(f"Bu soru veritabanında bulundu! ({match_status})")
             else:
-                st.error("Bu soru pek benzemiyor.")
+                st.error("Bu soru pek benzemiyor, emin değilim.")
